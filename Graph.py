@@ -13,6 +13,8 @@ class Graph:
         if graphType not in ["DIRECTED", "UNDIRECTED"]:
             raise Exception("the graphType args should be either `DIRECTED` or `UNDIRECTED`")
         self.graphType = graphType
+        self.vertices  = {}
+        self.matrix    = []
 
     def addEdge(self,source,destination,cost=1):
         if (not source) or (not destination):
@@ -55,7 +57,7 @@ def main():
     graph.addEdge("b","d")
     graph.addEdge("d","a")
     graph.showList()
-       
+           
     print("\n\n")
 
     graph2 = Graph("UNDIRECTED")
