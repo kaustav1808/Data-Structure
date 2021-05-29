@@ -8,6 +8,8 @@ class Graph:
     graphType   = None # "DIRECTED", "UNDIRECTED"
     vertices    = {}
     matrix      = []
+    visited      = []
+    root        = None
 
     def __init__(self,graphType = 'DIRECTED'):
         if graphType not in ["DIRECTED", "UNDIRECTED"]:
@@ -15,6 +17,8 @@ class Graph:
         self.graphType = graphType
         self.vertices  = {}
         self.matrix    = []
+        self.visited   = {}
+        self.root      = None
 
     def addEdge(self,source,destination,cost=1):
         if (not source) or (not destination):
@@ -47,6 +51,42 @@ class Graph:
     def addEdgeInMatrix(self,source,sink,cost):
         pass
 
+    def bfsTraversal(self,s,d, recreate=True):
+        if s not in self.vertices or d not in self.vertices:
+            raise Exception("node {s} or {d} not in the graph".format(s=s,d=d))
+        if recreate:    
+            self.visited = {}
+            self.root    = s
+            for node in self.vertices:
+                self.visited[node] = {"distance":-1,"status":0,"parent":None}
+            self.visited[s] = {"distance":0,"status":0,"parent":None}
+            queue = []
+            queue.append(s)
+            while len(queue):
+                v = queue.pop(0)
+                for node in self.vertices[v]:
+                    if not self.visited[node]["status"]:
+                        self.visited[node]["status"]   = 1    
+                        self.visited[node]["distance"] = self.visited[v]["distance"] + 1    
+                        self.visited[node]["parent"]   = v
+                        queue.append(node)
+                self.visited[v]["status"] = 2
+        
+        if s != self.root:
+            raise Exception("the root vertices is not same.")
+        self.pathFromSource(s,d)        
+
+    def pathFromSource(self,s,v):
+        if s==v:
+            print("{v} ".format(v=v),end=".")
+            print("\n")
+        elif not v:
+            print("No parent found",end=".")
+        else:
+            print("{v} ".format(v=v),end="-> ")
+            self.pathFromSource(s,self.visited[v]["parent"])
+                                     
+
 
 def main():
     graph = Graph()
@@ -68,6 +108,10 @@ def main():
     graph2.addEdge("b","d",2)
     graph2.addEdge("d","a",13)
     graph2.showList()
+
+    graph.bfsTraversal("a","d")
+    graph.bfsTraversal("a","c",False)
+    graph.bfsTraversal("b","d")
 
 if __name__ == "__main__":
     main()
