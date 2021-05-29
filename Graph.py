@@ -76,6 +76,26 @@ class Graph:
             raise Exception("the root vertices is not same.")
         self.pathFromSource(s,d)        
 
+    def dfsTraversal(self):
+        self.visited = {}
+        for node in self.vertices:
+            self.visited[node] = {"distance":-1,"status":0,"parent":None}
+
+        for node in self.vertices:
+            if not self.visited[node]["status"]:
+                self.dfsVisit(node)        
+
+    def dfsVisit(self,u):
+        self.visited[u]["status"] = 1
+        print("{node}".format(node=u),end="->")
+        for each in self.vertices[u]:
+            if not self.visited[each]["status"]:
+                self.visited[each]["parent"] = u
+                self.dfsVisit(each)
+        self.visited["status"] = 2    
+                
+
+
     def pathFromSource(self,s,v):
         if s==v:
             print("{v} ".format(v=v),end=".")
@@ -112,6 +132,8 @@ def main():
     graph.bfsTraversal("a","d")
     graph.bfsTraversal("a","c",False)
     graph.bfsTraversal("b","d")
+
+    graph2.dfsTraversal()
 
 if __name__ == "__main__":
     main()
