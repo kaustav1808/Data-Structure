@@ -5,39 +5,39 @@ __email__ = "kaustavofficial1808@gmail.com"
 
 
 class Graph:
-    graphType   = None # "DIRECTED", "UNDIRECTED"
-    vertices    = {}
-    matrix      = []
-    visited      = []
-    root        = None
+    graphType = None  # "DIRECTED", "UNDIRECTED"
+    vertices = {}
+    matrix = []
+    visited = []
+    root = None
 
-    def __init__(self,graphType = 'DIRECTED'):
+    def __init__(self, graphType='DIRECTED'):
         if graphType not in ["DIRECTED", "UNDIRECTED"]:
-            raise Exception("the graphType args should be either `DIRECTED` or `UNDIRECTED`")
+            raise Exception(
+                "the graphType args should be either `DIRECTED` or `UNDIRECTED`")
         self.graphType = graphType
-        self.vertices  = {}
-        self.matrix    = []
-        self.visited   = {}
-        self.root      = None
+        self.vertices = {}
+        self.matrix = []
+        self.visited = {}
+        self.root = None
 
-    def addEdge(self,source,destination,cost=1):
+    def addEdge(self, source, destination, cost=1):
         if (not source) or (not destination):
             raise Exception("need source and destination to add the edges.")
 
-        if cost <=0:
+        if cost <= 0:
             raise Exception("cost must be greater than equal to 0")
 
-        self.addEdgeInLiSt(source,destination,cost)    
-                
+        self.addEdgeInLiSt(source, destination, cost)
 
-    def addEdgeInLiSt(self,source,sink,cost):
+    def addEdgeInLiSt(self, source, sink, cost):
         if source not in self.vertices:
             self.vertices[source] = {}
         if sink not in self.vertices:
-            self.vertices[sink]   = {}
+            self.vertices[sink] = {}
 
         if sink not in self.vertices[source]:
-            self.vertices[source][sink] = cost 
+            self.vertices[source][sink] = cost
 
         if (self.graphType == 'UNDIRECTED') and (source not in self.vertices[sink]):
             self.vertices[sink][source] = cost
@@ -46,55 +46,78 @@ class Graph:
         for node in self.vertices.items():
             print("node ({node}) -> ".format(node=node[0]))
             for adjacentNode, cost in node[1].items():
-                print(" node ({node}), cost({cost})".format(node=adjacentNode,cost=cost))
+                print(" node ({node}), cost({cost})".format(
+                    node=adjacentNode, cost=cost))
 
-    def addEdgeInMatrix(self,source,sink,cost):
+    def addEdgeInMatrix(self, source, sink, cost):
         pass
 
-    def bfsTraversal(self,s,d, recreate=True):
+    def bfsTraversal(self, s, d, recreate=True):
         if s not in self.vertices or d not in self.vertices:
-            raise Exception("node {s} or {d} not in the graph".format(s=s,d=d))
-        if recreate:    
+            raise Exception(
+                "node {s} or {d} not in the graph".format(s=s, d=d))
+        if recreate:
             self.visited = {}
-            self.root    = s
+            self.root = s
             for node in self.vertices:
-                self.visited[node] = {"distance":-1,"status":0,"parent":None}
-            self.visited[s] = {"distance":0,"status":0,"parent":None}
+                self.visited[node] = {"distance": -
+                    1, "status": 0, "parent": None}
+            self.visited[s] = {"distance": 0, "status": 0, "parent": None}
             queue = []
             queue.append(s)
             while len(queue):
                 v = queue.pop(0)
                 for node in self.vertices[v]:
                     if not self.visited[node]["status"]:
-                        self.visited[node]["status"]   = 1    
-                        self.visited[node]["distance"] = self.visited[v]["distance"] + 1    
-                        self.visited[node]["parent"]   = v
+                        self.visited[node]["status"] = 1
+                        self.visited[node]["distance"] = self.visited[v]["distance"] + 1
+                        self.visited[node]["parent"] = v
                         queue.append(node)
                 self.visited[v]["status"] = 2
-        
+
         if s != self.root:
             raise Exception("the root vertices is not same.")
-        self.pathFromSource(s,d)        
+        self.pathFromSource(s, d)
 
     def dfsTraversal(self):
         self.visited = {}
         for node in self.vertices:
-            self.visited[node] = {"distance":-1,"status":0,"parent":None}
+            self.visited[node] = {"distance": -1, "status": 0, "parent": None}
 
         for node in self.vertices:
             if not self.visited[node]["status"]:
-                self.dfsVisit(node)        
+                self.dfsVisit(node)
 
-    def dfsVisit(self,u):
+    def dfsVisit(self, u):
         self.visited[u]["status"] = 1
-        print("{node}".format(node=u),end="->")
+        print("{node}".format(node=u), end="->")
         for each in self.vertices[u]:
             if not self.visited[each]["status"]:
                 self.visited[each]["parent"] = u
                 self.dfsVisit(each)
-        self.visited["status"] = 2    
-                
-
+        self.visited["status"] = 2
+    
+    def isCycle(self):
+        self.visited = {}
+        for node in self.vertices:
+            self.visited[node] = 0
+        for node in self.vertices:
+            if not self.visited[node]:
+                if self.cycleFindingDFS(node, -1): return True
+        return False
+    
+    def cycleFindingDFS(self,v,parent):
+        self.visited[v] = 1
+        for node in self.vertices[v]:
+	        if parent == node:
+	            continue
+	        if (node == v) or (self.visited[node] == 1):
+	            return True
+	        else:
+	            if self.cycleFindingDFS(node, v):
+	                return True
+        self.visited[v] = 2
+        return False
 
     def pathFromSource(self,s,v):
         if s==v:
@@ -118,6 +141,10 @@ def main():
     graph.addEdge("d","a")
     graph.showList()
            
+    if graph.isCycle():
+        print("Graph is cyclic")
+    else:
+        print("Graph is acyclic")       
     print("\n\n")
 
     graph2 = Graph("UNDIRECTED")
@@ -134,6 +161,21 @@ def main():
     graph.bfsTraversal("b","d")
 
     graph2.dfsTraversal()
+    print("\n\n")
+
+    if graph2.isCycle():
+        print("Graph is cyclic")
+    else:
+        print("Graph is acyclic")
+
+    graph3 = Graph("DIRECTED")
+    graph3.addEdge("a","b")     
+    graph3.addEdge("b","c")     
+    graph3.addEdge("c","d")     
+    if graph3.isCycle():
+        print("Graph is cyclic")
+    else:
+        print("Graph is acyclic")
 
 if __name__ == "__main__":
     main()
