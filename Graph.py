@@ -1,3 +1,5 @@
+import math
+
 __author__ = "Kaustav Bhattacharya"
 __credits__ = "Kaustav Bhattacharya"
 __maintainer__ = "Kaustav Bhattacharya"
@@ -129,6 +131,34 @@ class Graph:
             print("{v} ".format(v=v),end="-> ")
             self.pathFromSource(s,self.visited[v]["parent"])
                                      
+    def dijkstraAlgorithm(self,s):
+        d = {}
+        u = {}
+        p = {} 
+        for i in self.vertices:
+            d[i] = math.inf
+            u[i] = False
+            p[i] = -1
+        d[s] = 0
+        for node in self.vertices:
+            v = -1 
+            for j in self.vertices:
+                if not u[j] and (v==-1 or (d[j] < d[v])):
+                    v = j
+
+            if math.isinf(d[v]):
+                break;   
+
+            u[v]  = True
+            for each in self.vertices[v]:
+                if d[each] > self.vertices[v][each]+d[v]:
+                    d[each] =  self.vertices[v][each]+d[v]
+                    p[each] = v
+        print(d)            
+
+
+
+
 
 
 def main():
@@ -145,6 +175,8 @@ def main():
         print("Graph is cyclic")
     else:
         print("Graph is acyclic")       
+    print("\n\n")
+    graph.dijkstraAlgorithm("a")
     print("\n\n")
 
     graph2 = Graph("UNDIRECTED")
@@ -163,6 +195,9 @@ def main():
     graph2.dfsTraversal()
     print("\n\n")
 
+    graph2.dijkstraAlgorithm("a")
+    print("\n\n")
+
     if graph2.isCycle():
         print("Graph is cyclic")
     else:
@@ -176,6 +211,11 @@ def main():
         print("Graph is cyclic")
     else:
         print("Graph is acyclic")
+
+    print("\n\n")
+
+    graph3.dijkstraAlgorithm("a")
+    print("\n\n")    
 
 if __name__ == "__main__":
     main()
