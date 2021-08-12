@@ -37,8 +37,11 @@ class MinHeap:
         return self.data[0]
 
     def smallChild(self,i):
+        # take the left child as we set up a complete binary tree
         if self.hasLeft(i):
             smallchild = self.left(i)
+            # check if the right child is less than the left one, if it is than we take the right 
+            # one as the small child for further comparing.
             if self.hasRight(i) and self.data[self.left(i)] > self.data[self.right(i)]:
                 smallchild = self.right(i)
             if self.data[smallchild] < self.data[i]:return smallchild
@@ -54,7 +57,10 @@ class MinHeap:
         min = self.data.pop()
         j = 0
         smallChild = self.smallChild(j)
+        # move down the max value until found a proper position where,
+        # the child node will be greater than the current node
         while j != smallChild:
+            #swap the value of smallest child with current node
             self.swap(j,self.smallChild(j))
             j = smallChild
             smallChild = self.smallChild(j)
