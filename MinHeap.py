@@ -14,15 +14,19 @@ class MinHeap:
     def parent(self,i) -> int:
         return (i-1) // 2
 
+   # return the left child node of the current node i's.
     def left(self,i) -> int:
         return 2*i+1
 
+    # return the right child node of the current node i's.
     def right(self,i) -> int:
         return 2*i+2
 
+    # check if the current node i's has any left child node.
     def hasLeft(self,i):
         return 2*i+1 < len(self.data)
 
+    # check if the current node i's has any right child node.
     def hasRight(self,i):
         return 2*i+2 < len(self.data)        
 
