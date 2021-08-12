@@ -1,3 +1,8 @@
+__author__ = "Kaustav Bhattacharya"
+__credits__ = "Kaustav Bhattacharya"
+__maintainer__ = "Kaustav Bhattacharya"
+__email__ = "kaustavofficial1808@gmail.com"
+
 class MinHeap:
     data= []
     def __init__(self) -> None:
